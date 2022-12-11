@@ -35,7 +35,7 @@ namespace KontaktyFrontend.Controllers
 
         public ActionResult Details()
         {
-            return View();
+            return PartialView();
         }
 
 
