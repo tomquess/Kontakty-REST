@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KontaktyBackend.Migrations
 {
     [DbContext(typeof(KontaktyDbContext))]
-    [Migration("20221211011955_CreateInitial")]
-    partial class CreateInitial
+    [Migration("20221211021115_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,7 +46,8 @@ namespace KontaktyBackend.Migrations
 
                     b.Property<string>("Imie")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Kategoria")
                         .IsRequired()
@@ -54,7 +55,8 @@ namespace KontaktyBackend.Migrations
 
                     b.Property<string>("Nazwisko")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Podkategoria")
                         .IsRequired()

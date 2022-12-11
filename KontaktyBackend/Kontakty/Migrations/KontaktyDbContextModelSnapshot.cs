@@ -43,7 +43,8 @@ namespace KontaktyBackend.Migrations
 
                     b.Property<string>("Imie")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Kategoria")
                         .IsRequired()
@@ -51,7 +52,8 @@ namespace KontaktyBackend.Migrations
 
                     b.Property<string>("Nazwisko")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Podkategoria")
                         .IsRequired()
