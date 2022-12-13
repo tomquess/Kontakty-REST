@@ -49,7 +49,7 @@ namespace KontaktyBackend.Controllers
             return Ok(await _dbContext.Kontakty.ToListAsync());
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult<List<KontaktModel>>> UpdateKontakt(KontaktModel request)
         {
             var dbKontakt = await _dbContext.Kontakty.FindAsync(request.Id);
