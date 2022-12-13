@@ -1,4 +1,7 @@
-﻿using KontaktyBackend.Models;
+﻿using KontaktyBackend.Helpers;
+using KontaktyBackend.Models;
+using KontaktyBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,37 +11,20 @@ namespace KontaktyBackend.Controllers
     [ApiController]
     public class KontaktController : ControllerBase
     {
-        private static List<KontaktModel> kontakty = new List<KontaktModel>
-            {
-                new KontaktModel {
-                    Id = 1,
-                    Imie = "asd",
-                    Nazwisko = "sad",
-                    Email = "sad",
-                    Haslo = "asdasd",
-                    Kategoria = "asd",
-                    Podkategoria = "asd",
-                    Telefon = "asd",
-                    Dataurodzenia = new DateTime(2008, 5, 1, 8, 30, 52)
-                },
-                new KontaktModel {
-                    Id = 2,
-                    Imie = "sssssss",
-                    Nazwisko = "saaaaaaddad",
-                    Email = "sasdadsd",
-                    Haslo = "asdasd",
-                    Kategoria = "asssd",
-                    Podkategoria = "asd",
-                    Telefon = "asd",
-                    Dataurodzenia = new DateTime(2008, 5, 1, 8, 30, 52)
-                }
-            };
-        private readonly KontaktyDbContext _dbContext;
 
-        public KontaktController(KontaktyDbContext dbContext)
+        private IUserService _userService;
+        private readonly KontaktyDbContext _dbContext;
+        private IConfiguration _config;
+
+
+        public KontaktController(IConfiguration config, KontaktyDbContext dbContext, IUserService userService)
         {
+            _config = config;
             _dbContext = dbContext;
+            _userService = userService;
         }
+
+        [AuthorizeUser]
         [HttpGet]
         public async Task<ActionResult<List<KontaktModel>>> Get()
         {
