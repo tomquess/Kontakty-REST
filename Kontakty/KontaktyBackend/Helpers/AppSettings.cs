@@ -2,5 +2,5 @@
 
 public class AppSettings
 {
-    public string Secret { get; set; }
+    public string Secret { get; set; } //secret - losowy string wygenerowany ręcznie w Appsettings.json
 }

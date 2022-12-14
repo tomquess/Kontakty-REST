@@ -33,7 +33,7 @@ namespace KontaktyBackend.Models
         public string Haslo { get; set; }
 
         [Required]
-        public Kategoria Kategoria { get; set; }
+        public Kategoria Kategoria { get; set; }  //Dictionary type ???
 
         [Required]
         [Phone]

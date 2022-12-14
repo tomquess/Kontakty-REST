@@ -29,7 +29,7 @@ namespace KontaktyBackend.Controllers
 
            
         [HttpGet]
-        public async Task<ActionResult<List<KontaktModel>>> Get()
+        public async Task<ActionResult<List<KontaktModel>>> Get()  //zwraca liste kontaktów
         {
 
             try
@@ -40,18 +40,18 @@ namespace KontaktyBackend.Controllers
                     Id = x.Id,
                     Imie = x.Imie,
                     Nazwisko = x.Nazwisko,
-                    Dataurodzenia = x.Dataurodzenia
+                    Dataurodzenia = x.Dataurodzenia  //zwraca podstawowe dane
                 })
-                .ToListAsync();
+                .ToListAsync();  //dodaje do listy kontakt
             }
-            catch (Exception ex)
+            catch (Exception ex)  //obsługa wyjątku
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<KontaktModel>> Get(int id)
+        public async Task<ActionResult<KontaktModel>> Get(int id)  //zwraca kontakt ze wszystkimi danymi
         {
             var kontakt = await _dbContext.Kontakty.FindAsync(id);
             if (kontakt == null)
@@ -60,18 +60,18 @@ namespace KontaktyBackend.Controllers
         }
         // custom property dla autoryzacji
         [HttpGet("{id}/details")]
-        public async Task<ActionResult<KontaktModel>> GetDetails(int id)
+        public async Task<ActionResult<KontaktModel>> GetDetails(int id) //zwraca kontakt ze wszystkimi danymi
         {
             try
             {
-                var kontakt = await _dbContext.Kontakty.FindAsync(id);
+                var kontakt = await _dbContext.Kontakty.FindAsync(id);  //wyszukuje kontakt w bazie danych po id
                 // var kategoriaId = await _dbContext.Kategoria.FindAsync(kontakt.Kategoria.KategoriaId);
                 //kontakt.Kategoria.NazwaKategorii = await _dbContext.Kategoria.
-                if (kontakt == null)
+                if (kontakt == null)                                          //sprawdza obecność kontaktu w bazie danych
                     return BadRequest("Brak takiego kontaku.");
                 return Ok(kontakt);
             }
-            catch (Exception ex)
+            catch (Exception ex)  //obsługa wyjątków
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
@@ -80,37 +80,43 @@ namespace KontaktyBackend.Controllers
 
         [HttpPost]
         [AuthorizeUser]  //customowy parametr do autoryzacji
-        public async Task<ActionResult<List<KontaktModel>>> AddKontakt(KontaktModel kontakt)
+        public async Task<ActionResult<List<KontaktModel>>> AddKontakt(KontaktModel kontakt) //POST dodaje kontakt do bazy danych
         {
             _dbContext.Kontakty.Add(kontakt);
-            await _dbContext.SaveChangesAsync();
-            return Ok(await _dbContext.Kontakty.ToListAsync());
+            await _dbContext.SaveChangesAsync(); //zapisz zmiany bazy danych
+            return Ok(await _dbContext.Kontakty.ToListAsync()); //komunikat zwrotny
         }
 
         [HttpPut]
         [AuthorizeUser]  //customowy parametr do autoryzacji
-        public async Task<ActionResult<List<KontaktModel>>> UpdateKontakt([FromForm]KontaktModel kontakt)
+        public async Task<ActionResult<List<KontaktModel>>> UpdateKontakt([FromForm]KontaktModel kontakt)   //źle zaimplementowany system aktualizacji
         {
             var dbKontakt = await _dbContext.Kontakty.FindAsync(kontakt.Id);
             if (dbKontakt == null)
                 return BadRequest("Brak takiego kontaku.");
 
-            dbKontakt.Imie = kontakt.Imie;
+            dbKontakt.Imie = kontakt.Imie;                  //zmiana danych
+            dbKontakt.Nazwisko = kontakt.Nazwisko;
+            dbKontakt.Email = kontakt.Email;
+            dbKontakt.Telefon = kontakt.Telefon;
+            dbKontakt.Kategoria = kontakt.Kategoria;
+            dbKontakt.Dataurodzenia = kontakt.Dataurodzenia;
+            dbKontakt.Haslo = kontakt.Haslo;
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();        //zapis
             return Ok(await _dbContext.Kontakty.ToListAsync());
         }
 
         [HttpDelete("{id}")]
         [AuthorizeUser]  //customowy parametr do autoryzacji
-        public async Task<ActionResult<KontaktModel>> Delete(int id)
+        public async Task<ActionResult<KontaktModel>> Delete(int id)  //DELETE po id
         {
             var dbKontakt = await _dbContext.Kontakty.FindAsync(id);
             if (dbKontakt == null)
                 return BadRequest("Brak takiego kontaku.");
 
-            _dbContext.Kontakty.Remove(dbKontakt);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Kontakty.Remove(dbKontakt); //usunięcie
+            await _dbContext.SaveChangesAsync(); //zapis
 
             return Ok(await _dbContext.Kontakty.ToListAsync());
         }
